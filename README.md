@@ -10,18 +10,9 @@ scalapac is a thin wrapper around Amazon's API: it takes care of the request sig
 
 scalapac is a near-enough port of @dmcquay's excellent [node-apac](https://github.com/dmcquay/node-apac), an equivalent Amazon Product Advertising Client for node.js. It also leans heavily on Alex Parvulescu's [Amazon Product Api REST Client in Scala](http://blog.pfa-labs.com/2009/08/amazon-product-api-rest-client-in-scala.html) blog post for the Scala request signing code. Many thanks Dustin and Alex.
 
-## Installation
-
-The latest build of scalapac is always available as a .jar from the Downloads dropdown in GitHub. This version was built against Scala 2.8.1 using sbt 0.7.5
-
-Note that the request signing in scalapac depends on the [Apache Commons Codec](http://commons.apache.org/codec/download_codec.cgi) - to run scalapac you will need commons-codec-1.5.jar in your classpath.
-
 ## Quick Start
 
-First download and install the scalapac and commons-codec jars. Now fire up scala and load the jars into your classpath (changing the paths as appropriate):
-
-    scala> :cp [YOUR JAR PATH HERE]/commons-codec-1.5.jar
-    scala> :cp [YOUR JAR PATH HERE]/scalapac-0.0.1.jar
+Launch an SBT console from the git repository root directory with 'sbt console.' This project is currently configured to run with Scala 2.11.5 and version 2013-08-01 of the Amazon API.
 
 Now you can import the OperationHelper class:
 
@@ -29,21 +20,29 @@ Now you can import the OperationHelper class:
 
 Create an OperationHelper (changing your Amazon credentials):
 
-    val opHelper = new OperationHelper(awsAccessKeyId     = "[YOUR AWS ID HERE]",
-                                       awsSecretKey       = "[YOUR AWS SECRET HERE]",
-                                       awsAssociateTagKey = "[YOUR ASSOCIATE TAG HERE]"
-                                       )
+    val opHelper = new OperationHelper(
+        awsAccessKeyId     = "[YOUR AWS ID HERE]",
+        awsSecretKey       = "[YOUR AWS SECRET HERE]",
+        awsAssociateTagKey = "[YOUR ASSOCIATE TAG HERE]")
 
-And now you can run a test against the Amazon Product Advertising API:
+And now you can run a test against the Amazon Product Advertising API and receive your results as either XML:
 
-    opHelper.debug("ItemSearch", Map("SearchIndex"    -> "Books",
-                                     "Keywords"       -> "harry potter",
-                                     "ResponseGroup"  -> "ItemAttributes,Offers"
-                                     ))
+    opHelper.debug(
+        "ItemSearch", 
+        Map("SearchIndex"    -> "Books",
+            "Keywords"       -> "harry potter",
+            "ResponseGroup"  -> "ItemAttributes,Offers"))
 
-If everything is working correctly, you should see an XML print-out of results from the Amazon API, along with a 200 response code.
+or JSON:
+    opHelper.debugJSON(
+        "ItemSearch", 
+        Map("SearchIndex"    -> "Books",
+            "Keywords"       -> "harry potter",
+            "ResponseGroup"  -> "ItemAttributes,Offers"))
 
-When using scalapac in production, instead of the debug() method you should use execute(). execute() takes exactly the same arguments as debug() but returns a tuple containing the response code (as an Int in _1) and the XML (as an Elem in _2):
+If everything is working correctly, you should see an XML or JSON print-out of results from the Amazon API, along with a 200 response code.
+
+When using scalapac in production, instead of the debug() (or debugJSON) method you should use execute() (or executeJSON). execute() takes exactly the same arguments as debug() but returns a tuple containing the response code (as an Int in _1) and the XML or JSON response (as an Elem or JValue in _2):
 
     val (code, xml) = opHelper.execute("ItemSearch", Map(...
 
@@ -72,7 +71,7 @@ You should see scalapac Compiling main sources, running ExampleItemSearch and th
 
 ## Copyright and License
 
-scalapac is copyright (c) 2011-2012 Orderly Ltd
+scalapac is copyright (c) 2011-2015 Orderly Ltd
 
 scalapac is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
