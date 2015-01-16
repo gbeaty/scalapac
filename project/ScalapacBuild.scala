@@ -28,8 +28,9 @@ object PrestasacBuild extends Build {
   lazy val prestasacProject = Project("prestasac", file("."))
     .settings(scalapacSettings: _*)
     .settings(
+      resolvers ++= resolutionRepos,
       libraryDependencies ++= Seq(
-        Libraries.codec
-      )
-    )
+        Libraries.codec,
+        Libraries.xml,
+        Libraries.json4sJackson))
 }

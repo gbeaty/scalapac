@@ -21,9 +21,8 @@ object BuildSettings {
     organization  := "co.orderly",
     version       := "0.2",
     description   := "A Scala client library for the Amazon Product Advertising API",
-    scalaVersion  := "2.9.1",
-    scalacOptions := Seq("-deprecation", "-encoding", "utf8")
-  )
+    scalaVersion  := "2.11.5",
+    scalacOptions := Seq("-deprecation", "-encoding", "utf8"))
 
   // Proguard settings for packaging
   import ProguardPlugin._
@@ -32,9 +31,7 @@ object BuildSettings {
       "-keepattributes *Annotation*,EnclosingMethod",
       "-dontskipnonpubliclibraryclassmembers",
       "-dontoptimize",
-      "-dontshrink"
-    )
-  )
+      "-dontshrink"))
 
   lazy val scalapacSettings = basicSettings ++ proguard
 }

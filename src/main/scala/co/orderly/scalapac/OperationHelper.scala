@@ -23,19 +23,35 @@ import java.io.{InputStream, IOException}
 import scala.collection.immutable.TreeMap
 import scala.xml._
 
+// JSON support
+import org.json4s._
+import org.json4s.jackson.JsonMethods._
+import org.json4s.Xml.toJson
+
 /**
  * Instantiate an OperationHelper to start executing operations against the Amazon Product API
  */
-class OperationHelper(awsAccessKeyId:       String,
-                      awsSecretKey:         String,
-                      awsAssociateTagKey:   String,
-                      endPoint:             String = "ecs.amazonaws.com"
-                      )
+class OperationHelper(
+  awsAccessKeyId:       String,
+  awsSecretKey:         String,
+  awsAssociateTagKey:   String,
+  endPoint:             String = "ecs.amazonaws.com")
 {
   // Definitions we use in the standard params
-  val VERSION  = "2011-08-01"
+  val VERSION  = "2013-08-01"
   val SERVICE  = "AWSECommerceService"
   val BASE_URI = "/onca/xml"
+
+  /** Execute an operation against the Amazon Product API with the supplied arguments
+    *
+    * Returns a tuple containing the return code and converted JSON contents from the
+    * Amazon Product API
+    */
+  def executeJSON(operation: String, args: Map[String, String]): (Int, JValue) = execute(operation, args) match {
+    case (code, elem) =>
+      val json = toJson(elem)
+      (code, json)
+  }
 
   /**
    * Execute an operation against the Amazon Product API with the supplied arguments
@@ -72,11 +88,23 @@ class OperationHelper(awsAccessKeyId:       String,
     val data = try {
       connection.getInputStream()
     } catch {
-      case e => connection.getErrorStream()
+      case (e: Throwable) => connection.getErrorStream()
     }
 
     val xml = XML.load(data)
     (responseCode, xml)
+  }
+
+
+  /**
+   * A wrapper which pretty-prints the JSON and prints out the return code.
+   * Useful for checking API responses in the console
+   */
+  def debugJSON(operation: String, args: Map[String, String]) {
+    val (code, json) = executeJSON(operation, args)
+    pretty(render(json))
+    println(pretty(render(json)))
+    println("Response code: " + code)
   }
 
   /**

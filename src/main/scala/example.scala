@@ -1,3 +1,4 @@
+//package co.orderly.scalapac.use
 /* Distributed as part of scalapac, an Amazon Product API client for Scala.
  *
  * Copyright (c) 2012 Orderly Ltd. All rights reserved.
@@ -17,19 +18,18 @@ import co.orderly.scalapac.OperationHelper
  * Simple console example of an Amazon Product API call using scalapac
  */
 object ExampleItemSearch {
-  
+  // Update this with your Amazon credentials before running
+  val opHelper =
+    new OperationHelper(
+      awsAccessKeyId     = "[ACCESS KEY]",
+      awsSecretKey       = "[SECRET KEY]",
+      awsAssociateTagKey = "[ASSOCIATE TAG KEY]")
+
   def main(args: Array[String]) {
-
-    // Update this with your Amazon credentials before running
-    val opHelper = new OperationHelper(awsAccessKeyId     = "[YOUR AWS ID HERE]",
-                                       awsSecretKey       = "[YOUR AWS SECRET HERE]",
-                                       awsAssociateTagKey = "[YOUR ASSOCIATE TAG HERE]"
-                                       )
-
-    // Or val (code, xml) = opHelper.execute(...
-    opHelper.debug("ItemSearch", Map("SearchIndex"    -> "Books",
-                                     "Keywords"       -> "harry potter",
-                                     "ResponseGroup"  -> "ItemAttributes,Offers"
-                                     ))
+    opHelper.debugJSON(
+      "ItemSearch",
+      Map("SearchIndex"    -> "Books",
+          "Keywords"       -> "harry potter",
+          "ResponseGroup"  -> "ItemAttributes,Offers"))
   }
 }
