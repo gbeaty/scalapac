@@ -1,17 +1,4 @@
-/* Distributed as part of scalapac, an Amazon Product API client for Scala.
- *
- * Copyright (c) 2012 Orderly Ltd. All rights reserved.
- *
- * This program is licensed to you under the Apache License Version 2.0,
- * and you may not use this file except in compliance with the Apache License Version 2.0.
- * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the Apache License Version 2.0 is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
- */
-package co.orderly.scalapac
+package scalapac
 
 // Java
 import java.net.URLEncoder
@@ -80,8 +67,8 @@ class RequestSignatureHelper(awsAccessKeyId:  String,
       return encoder.encodeToString(rawHmac).trim()
 
     } catch { // User has forgotten to include Base64()
-      case e:NoClassDefFoundError => throw new RuntimeException("Cannot find apache.commons.codec.binary.Base64")
-      case e => throw new RuntimeException(UTF8_CHARSET + " is unsupported")
+      case e: NoClassDefFoundError => throw new RuntimeException("Cannot find apache.commons.codec.binary.Base64")
+      case e: Throwable => throw new RuntimeException(UTF8_CHARSET + " is unsupported")
     }
   }
 
@@ -93,7 +80,7 @@ class RequestSignatureHelper(awsAccessKeyId:  String,
     try {
       return URLEncoder.encode(s, UTF8_CHARSET).replace("+", "%20").replace("*", "%2A").replace("%7E", "~")
     } catch  {
-      case e => throw new RuntimeException(UTF8_CHARSET + " is unsupported")
+      case e: Throwable => throw new RuntimeException(UTF8_CHARSET + " is unsupported")
     }
   }
 }

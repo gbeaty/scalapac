@@ -18,20 +18,11 @@ object BuildSettings {
 
   // Basic settings for our app
   lazy val basicSettings = Seq[Setting[_]](
-    organization  := "co.orderly",
+    organization  := "com.github.gbeaty",
     version       := "0.2",
     description   := "A Scala client library for the Amazon Product Advertising API",
-    scalaVersion  := "2.11.5",
+    scalaVersion  := "2.11.8",
     scalacOptions := Seq("-deprecation", "-encoding", "utf8"))
 
-  // Proguard settings for packaging
-  import ProguardPlugin._
-  lazy val proguard = proguardSettings ++ Seq(
-    proguardOptions := Seq(
-      "-keepattributes *Annotation*,EnclosingMethod",
-      "-dontskipnonpubliclibraryclassmembers",
-      "-dontoptimize",
-      "-dontshrink"))
-
-  lazy val scalapacSettings = basicSettings ++ proguard
+  lazy val scalapacSettings = basicSettings
 }

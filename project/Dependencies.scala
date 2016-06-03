@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
   val resolutionRepos = Seq(
-    ScalaToolsSnapshots,
+    // ScalaToolsSnapshots,
     "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
     "Sonatype OSS Resources" at "https://oss.sonatype.org/content/repositories/releases",
     "Typesafe Repository" at "https://repo.typesafe.com/typesafe/releases"
